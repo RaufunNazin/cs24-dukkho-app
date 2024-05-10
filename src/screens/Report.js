@@ -8,28 +8,21 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
 } from 'react-native';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import React, {useState} from 'react';
 import tw from 'twrnc';
 import Toast from 'react-native-toast-message';
 import api from '../../api';
 
 const Report = () => {
-  const [name, setName] = useState('');
   const [location, setLocation] = useState('');
   const [type, setType] = useState('');
   const [description, setDescription] = useState('');
+  const [anonymous, setAnonymous] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const report = () => {
-    if (!name) {
-      Toast.show({
-        type: 'error',
-        text1: 'Invalid Name',
-        text2: 'This field cannot be empty',
-        autoHide: true,
-        topOffset: 10,
-      });
-    } else if (!location) {
+    if (!location) {
       Toast.show({
         type: 'error',
         text1: 'Invalid Location',
@@ -56,11 +49,11 @@ const Report = () => {
     } else {
       setLoading(true);
       api
-        .post('/users/register', {
-            name: name,
-            location: location,
-            type: type,
-            description: description,
+        .post('/ticket/', {
+          location: location,
+          type: type,
+          description: description,
+          anonymous: anonymous,
         })
         .then(res => {
           console.log(res.data);
@@ -97,12 +90,6 @@ const Report = () => {
           <View style={tw`flex-col gap-y-5 mt-12`}>
             <TextInput
               style={tw`p-3 border-b border-gray-400`}
-              placeholder="Name"
-              value={name}
-              onChangeText={setName}
-            />
-            <TextInput
-              style={tw`p-3 border-b border-gray-400`}
               placeholder="Location"
               value={location}
               onChangeText={setLocation}
@@ -120,6 +107,25 @@ const Report = () => {
               onChangeText={setDescription}
             />
           </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 5,
+              marginTop: 20,
+            }}>
+            <BouncyCheckbox
+              size={20}
+              fillColor="black"
+              unFillColor="#FFFFFF"
+              disableText={true}
+              onPress={isChecked => {
+                setAnonymous(isChecked);
+              }}
+            />
+            <Text>Post as Anonymous</Text>
+          </View>
+
           <Pressable
             style={tw`bg-black p-4 rounded-2xl mt-10 shadow-md`}
             onPress={() => report()}>
