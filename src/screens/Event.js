@@ -7,22 +7,80 @@ import Toast from 'react-native-toast-message';
 const Event = () => {
   const [events, setEvents] = useState([]);
   const getEvents = () => {
-    api.get('/event/').then(res => {
-      setEvents(res.data);
-    });
+    api
+      .get('/event/')
+      .then(res => {
+        setEvents(res.data);
+      })
+      .catch(err => {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'An error occurred',
+          autoHide: true,
+          topOffset: 10,
+        });
+        console.log(err);
+      });
   };
   const eventss = [
     {
       id: 1,
-      name: 'Waste Clean',
-      description: 'desc',
-      location: 'shahbagh',
-      start_time: 3,
-      end_time: 4,
-      created_at: 1715377113,
+      name: 'Community Park Cleanup',
+      description:
+        'Join us for a community park cleanup event where we will be picking up litter, planting trees, and beautifying our neighborhood park.',
+      location: 'Central Park',
+      start_time: '2024-05-15T10:00:00',
+      end_time: '2024-05-15T12:00:00',
+      created_at: 1620702000, // May 11, 2021
+      followed: false,
+    },
+    {
+      id: 2,
+      name: 'Food Drive for Homeless Shelter',
+      description:
+        'Help us collect non-perishable food items to donate to our local homeless shelter. Every donation makes a difference!',
+      location: 'Downtown Community Center',
+      start_time: '2024-06-01T09:00:00',
+      end_time: '2024-06-01T17:00:00',
+      created_at: 1630345200, // September 30, 2021
+      followed: true,
+    },
+    {
+      id: 3,
+      name: 'Environmental Awareness Workshop',
+      description:
+        'Learn about the importance of environmental conservation and sustainability in this interactive workshop. Guest speakers and activities included!',
+      location: 'Green Earth Institute',
+      start_time: '2024-06-10T13:00:00',
+      end_time: '2024-06-10T16:00:00',
+      created_at: 1634281200, // October 15, 2021
+      followed: false,
+    },
+    {
+      id: 4,
+      name: 'Blood Donation Camp',
+      description:
+        'Be a hero and save lives by donating blood! Join us for a blood donation camp where your contribution can make a difference.',
+      location: 'City Hospital',
+      start_time: '2024-07-05T08:00:00',
+      end_time: '2024-07-05T14:00:00',
+      created_at: 1638562800, // December 4, 2021
+      followed: true,
+    },
+    {
+      id: 5,
+      name: 'Tech Conference: Future Trends',
+      description:
+        'Stay ahead of the curve! Attend our tech conference to learn about the latest trends and innovations shaping the future of technology.',
+      location: 'Innovation Center',
+      start_time: '2024-08-20T09:30:00',
+      end_time: '2024-08-20T17:00:00',
+      created_at: 1642777200, // January 21, 2022
       followed: false,
     },
   ];
+
   const follow = id => {
     api
       .get(`/event/${id}/follow`)
@@ -61,9 +119,9 @@ const Event = () => {
         Browse Events
       </Text>
       <ScrollView style={{flex: 1}}>
-        {eventss.map(event => {
+        {events.map((event, i) => {
           return (
-            <View>
+            <View key={i}>
               <View
                 key={event.id}
                 style={{
@@ -109,7 +167,8 @@ const Event = () => {
                       fontSize: 12,
                       fontWeight: 'light',
                     }}>
-                    {event.start_time}PM - {event.end_time}PM
+                    {event.start_time}PM - {event.end_time}
+                    PM
                   </Text>
                 </View>
                 <View

@@ -14,7 +14,7 @@ import tw from 'twrnc';
 import Toast from 'react-native-toast-message';
 import api from '../../api';
 
-const Report = () => {
+const Report = ({navigation}) => {
   const [location, setLocation] = useState('');
   const [type, setType] = useState('');
   const [description, setDescription] = useState('');
@@ -51,9 +51,9 @@ const Report = () => {
       api
         .post('/ticket/', {
           location: location,
-          type: type,
+          category: type,
           description: description,
-          anonymous: anonymous,
+          anonymous: anonymous === true ? 1 : 0,
         })
         .then(res => {
           console.log(res.data);
@@ -63,6 +63,10 @@ const Report = () => {
             autoHide: true,
             topOffset: 10,
           });
+          setAnonymous(false);
+          setLocation('');
+          setType('');
+          setDescription('');
           setLoading(false);
         })
         .catch(err => {
@@ -139,6 +143,9 @@ const Report = () => {
               </Text>
             )}
           </Pressable>
+          {/* <Pressable onPress={() => navigation.navigate('My Tickets')}>
+            <Text>View my tickets</Text>
+          </Pressable> */}
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

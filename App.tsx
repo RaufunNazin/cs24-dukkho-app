@@ -8,6 +8,7 @@ import Report from './src/screens/Report';
 import Feed from './src/screens/Feed';
 import Map from './src/screens/Map';
 import Event from './src/screens/Event';
+import Myticket from './src/screens/Myticket';
 
 const Drawer = createDrawerNavigator();
 
@@ -26,6 +27,7 @@ function App() {
         <Drawer.Screen name="Events" component={Event} />
         <Drawer.Screen name="Map" component={Map} />
         <Drawer.Screen name="Report" component={Report} />
+        {/* <Drawer.Screen name="My Tickets" component={Myticket} /> */}
         <Drawer.Screen name="Login" component={Login} />
         <Drawer.Screen name="Register" component={Register} />
       </Drawer.Navigator>

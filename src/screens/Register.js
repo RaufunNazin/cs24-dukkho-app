@@ -73,7 +73,7 @@ const Register = ({navigation}) => {
           password: password,
         })
         .then(res => {
-          console.log(res.data);
+          navigation.navigate('Social Feed');
           Toast.show({
             type: 'success',
             text1: 'Welcome back!',

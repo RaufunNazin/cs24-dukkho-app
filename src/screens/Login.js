@@ -43,7 +43,8 @@ const Login = ({navigation}) => {
           password: password,
         })
         .then(res => {
-          console.log(res.data);
+          // navigation.navigate('Social Feed');
+          getProfile();
           Toast.show({
             type: 'success',
             text1: 'Welcome back!',
@@ -65,6 +66,30 @@ const Login = ({navigation}) => {
           });
         });
     }
+  };
+
+  const getProfile = () => {
+    api
+      .get('/auth/me')
+      .then(() => {
+        Toast.show({
+          type: 'success',
+          text1: 'Profile',
+          text2: 'Profile fetched',
+          autoHide: true,
+          topOffset: 10,
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        Toast.show({
+          type: 'error',
+          text1: 'Uh-oh!',
+          text2: 'Profile fetch failed',
+          autoHide: true,
+          topOffset: 10,
+        });
+      });
   };
 
   return (

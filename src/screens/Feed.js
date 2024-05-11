@@ -1,6 +1,6 @@
 import {View, Text, TextInput, Pressable, ScrollView} from 'react-native';
 import React, {useState, useEffect} from 'react';
-import tw from 'twrnc';
+import tw, {create} from 'twrnc';
 import api from '../../api';
 import Toast from 'react-native-toast-message';
 
@@ -8,45 +8,90 @@ const Feed = () => {
   const [post, setPost] = useState('');
   const [posts, setPosts] = useState([]);
   const getPosts = () => {
-    api.get('/post/').then(res => {
-      setPosts(res.data);
-    });
+    api
+      .get('/post/')
+      .then(res => {
+        Toast.show({
+          type: 'success',
+          text1: 'Liked',
+          text2: 'You have liked the post',
+          autoHide: true,
+          topOffset: 10,
+        });
+        setPosts(res.data);
+        setPost('');
+      })
+      .catch(err => {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'An error occurred',
+          autoHide: true,
+          topOffset: 10,
+        });
+      });
   };
   const postss = [
     {
       id: 1,
-      name: 'Emma Thompson',
-      username: '@EcoWarriorEm',
-      post: 'Reducing waste starts with small changes. Today, I swapped single-use plastic bottles for a reusable one. Every little action counts! ♻️ #WasteReduction #GoGreen',
-      likes: 256,
+      created_by: {
+        id: 1,
+        name: 'Emma Thompson',
+        username: '@EcoWarriorEm',
+      },
+      content:
+        'Reducing waste starts with small changes. Today, I swapped single-use plastic bottles for a reusable one. Every little action counts! ♻️ #WasteReduction #GoGreen',
+      like_count: 256,
+      created_at: 1715377113,
+      liked: false,
     },
     {
       id: 2,
-      name: 'David Attenborough',
-      username: '@PlanetProtectorDave',
-      post: 'The Amazon Rainforest is home to millions of species. It is our duty to protect it. 🌳🦜 #SaveTheAmazon #ClimateAction',
-      likes: 1024,
+      created_by: {
+        name: 'David Attenborough',
+        username: '@PlanetProtectorDave',
+      },
+      content:
+        'The Amazon Rainforest is home to millions of species. It is our duty to protect it. 🌳🦜 #SaveTheAmazon #ClimateAction',
+      like_count: 1024,
+      created_at: 1715377113,
+      liked: false,
     },
     {
       id: 3,
-      name: 'Greta Thunberg',
-      username: '@FridaysForFuture',
-      post: 'The climate crisis is real. We must act now. Join the movement. 🌍💚 #ClimateEmergency #ActNow',
-      likes: 4096,
+      created_by: {
+        name: 'Greta Thunberg',
+        username: '@FridaysForFuture',
+      },
+      content:
+        'The climate crisis is real. We must act now. Join the movement. 🌍💚 #ClimateEmergency #ActNow',
+      like_count: 4096,
+      created_at: 1715377113,
+      liked: true,
     },
     {
       id: 4,
-      name: 'Leonardo DiCaprio',
-      username: '@LeoDiCaprio',
-      post: 'The time is now. We must transition to renewable energy sources to combat climate change. ☀️🌬️ #RenewableEnergy #ClimateAction',
-      likes: 2048,
+      created_by: {
+        name: 'Leonardo DiCaprio',
+        username: '@LeoDiCaprio',
+      },
+      content:
+        'The time is now. We must transition to renewable energy sources to combat climate change. ☀️🌬️ #RenewableEnergy #ClimateAction',
+      like_count: 2048,
+      created_at: 1715377113,
+      liked: false,
     },
     {
       id: 5,
-      name: 'Jane Goodall',
-      username: '@JaneGoodallInst',
-      post: 'Every individual matters. Every individual has a role to play. 🌍🐒 #Conservation #Biodiversity',
-      likes: 512,
+      created_by: {
+        name: 'Jane Goodall',
+        username: '@JaneGoodallInst',
+      },
+      content:
+        'Every individual matters. Every individual has a role to play. 🌍🐒 #Conservation #Biodiversity',
+      like_count: 512,
+      created_at: 1715377113,
+      liked: true,
     },
   ];
   const like = id => {
@@ -142,12 +187,12 @@ const Feed = () => {
                   alignItems: 'center',
                 }}>
                 <View>
-                  <Text style={{fontWeight: '700', fontSize: 20}}>
+                  <Text style={{fontWeight: '700', fontSize: 16}}>
                     {post.created_by.name}
                   </Text>
                   <Text style={{color: '#666', marginTop: -2}}>
                     {post.created_by.username
-                      ? `@${post.created_by.username}`
+                      ? `${post.created_by.username}`
                       : '@Anonymous'}
                   </Text>
                 </View>
@@ -165,7 +210,7 @@ const Feed = () => {
                   ) : (
                     <Text
                       style={{
-                        color: 'blue',
+                        color: '#666',
                       }}>
                       Liked
                     </Text>
@@ -173,10 +218,17 @@ const Feed = () => {
                 </View>
               </View>
 
-              <Text>{post.content}</Text>
+              <Text style={{
+                color: 'black',
+                fontSize: 18,
+                marginTop: 5,
+                marginBottom: 5,
+              
+              }}>{post.content}</Text>
               <View
                 style={{
                   flex: 1,
+                  flexDirection: 'row',
                   justifyContent: 'space-between',
                   alignItems: 'center',
                 }}>
